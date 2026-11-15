@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(SherbinyCppLib main.cpp
         src/Srtring.cpp
-        include/Srtring.h
+        include/MyString.h
         src/Vector.cpp
         include/Vector.h
 )

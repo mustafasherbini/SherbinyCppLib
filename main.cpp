@@ -1,7 +1,7 @@
 #include <iostream>
 #include <utility> // For std::move
 #include <cassert> // For runtime assertions
-#include "Srtring.h"
+#include "MyString.h"
 
 int main() {
     // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.// 1. Test Constructors (Default and C-String)

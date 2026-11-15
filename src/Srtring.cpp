@@ -1,4 +1,4 @@
-#include "Srtring.h"
+#include "MyString.h"
 
 #include <cstring>
 #include <iostream>
