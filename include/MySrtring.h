@@ -3,15 +3,15 @@
 #include <iostream>
 
 class String {
-    size_t m_Size;
-    char* m_Buffer;
+    size_t m_Size = 0;
+    char* m_Buffer = nullptr;
 public:
     String();
     String(const char*);
 
     // rule of 5
     ~String() ;
-    String( const String& other);
+    String( const String& );
     String& operator= (const String&);
     String(String&&) noexcept;
     String& operator= (String&&) noexcept;
