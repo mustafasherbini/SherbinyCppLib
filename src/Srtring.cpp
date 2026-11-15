@@ -3,11 +3,8 @@
 #include <cstring>
 #include <iostream>
 #include <utility>
-String::String() :m_Size(0),m_Buffer(nullptr) {
 
-}
-
-String::String(const char* string) :m_Size(0),m_Buffer(nullptr) {
+String::String(const char* string) {
 
     if (string==nullptr)
         return ;
@@ -21,7 +18,7 @@ String::String(const char* string) :m_Size(0),m_Buffer(nullptr) {
 String::~String() {
     delete [] m_Buffer;
 }
-String::String( const String& other) :m_Size(0),m_Buffer(nullptr){
+String::String( const String& other) {
 
     if (other.m_Buffer == nullptr)
         return;

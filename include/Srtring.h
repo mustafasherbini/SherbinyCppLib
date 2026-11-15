@@ -6,7 +6,7 @@ class String {
     size_t m_Size = 0;
     char* m_Buffer = nullptr;
 public:
-    String();
+    String() =default;
     String(const char*);
 
     // rule of 5
