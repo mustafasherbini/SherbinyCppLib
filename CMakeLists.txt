@@ -6,8 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(SherbinyCppLib main.cpp
         src/String.cpp
         include/MyString.h
-        src/Vector.cpp
         include/Vector.h
-)
+        include/Vector.tpp)
 
 target_include_directories(SherbinyCppLib PRIVATE include)

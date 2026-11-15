@@ -1,6 +1,6 @@
-#include "../include/Vector.h"
 #include <algorithm>
-
+#include <utility>
+#include <new>
 template<typename T>
 void Vector<T>::ReAlloc() {
 

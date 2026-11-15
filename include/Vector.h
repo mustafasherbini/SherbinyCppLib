@@ -50,5 +50,5 @@ public:
 
 
 };
-
+#include "Vector.tpp"
 
