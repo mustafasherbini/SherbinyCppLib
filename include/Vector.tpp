@@ -1,6 +1,3 @@
-#include <algorithm>
-#include <utility>
-#include <new>
 template<typename T>
 void Vector<T>::ReAlloc() {
 
@@ -17,7 +14,8 @@ void Vector<T>::ReAlloc(size_t newCapacity) {
     if (newCapacity<m_Size)
         newCapacity=m_Size;
 
-   auto temp_Buffer = newCapacity? (T*)::operator new(newCapacity * sizeof(T))
+   auto temp_Buffer = newCapacity? static_cast<T*>
+    (::operator new(newCapacity * sizeof(T)))
     : nullptr;
 
     for (size_t i = 0; i < m_Size; ++i) {
@@ -34,7 +32,7 @@ void Vector<T>::ReAlloc(size_t newCapacity) {
 template<typename T>
 Vector<T>::Vector(size_t size, const T & defaultValue) {
     ReAlloc(size);
-    for (int i = 0; i < size; ++i) {
+    for (size_t  i = 0; i < size; ++i) {
        new (&m_Buffer[i]) T(defaultValue);
     }
     m_Size=size;
@@ -42,22 +40,23 @@ Vector<T>::Vector(size_t size, const T & defaultValue) {
 template<typename T>
 Vector<T>::Vector(size_t size) {
     ReAlloc(size);
-    for (int i = 0; i < size; ++i) {
+    for (size_t  i = 0; i < size; ++i) {
         new (&m_Buffer[i]) T();
     }
     m_Size=size;
 }
 
 template<typename T>
-Vector<T>::Vector(const Vector & other) : m_Size(other.m_Size) , m_Capacity(other.m_Capacity) {
+Vector<T>::Vector(const Vector & other){
 
-    if (other.Empty() || &other ==this)
+    if (other.Empty())
         return;
 
     m_Size=other.m_Size;
     m_Capacity=other.m_Capacity;
-    m_Buffer = (T*)::operator new(m_Capacity * sizeof(T));
-    for (int i = 0; i < m_Size; ++i) {
+    m_Buffer = static_cast<T*>
+    (::operator new(m_Capacity * sizeof(T)));
+    for (size_t  i = 0; i < m_Size; ++i) {
         new(&m_Buffer[i]) T(other.m_Buffer[i]);
     }
 
@@ -69,29 +68,15 @@ Vector<T> &Vector<T>::operator=(const Vector & other) {
     if (&other ==this)
         return *this;
 
-    Clear();
-    ::operator delete(m_Buffer , m_Capacity* sizeof(T));
-
-    m_Size=other.m_Size;
-    m_Capacity=other.m_Capacity;
-
-    if (other.Empty()) {
-        m_Buffer = nullptr;
-        return *this;
-    }
-
-    m_Buffer = (T*)::operator new(other.m_Capacity * sizeof(T));
-
-    for (int i = 0; i < m_Size; ++i) {
-        new(&m_Buffer[i]) T(other.m_Buffer[i]);
-    }
+    Vector tmp(other);
+    std::swap(m_Size, tmp.m_Size);
+    std::swap(m_Capacity, tmp.m_Capacity);
+    std::swap(m_Buffer, tmp.m_Buffer);
     return *this;
+
 }
 template<typename T>
 Vector<T>::Vector(Vector && other) noexcept : m_Size(other.m_Size), m_Capacity(other.m_Capacity), m_Buffer(other.m_Buffer) {
-
-    if (&other == this)
-        return;
 
     other.m_Size=0;
     other.m_Capacity=0;
@@ -101,7 +86,7 @@ Vector<T>::Vector(Vector && other) noexcept : m_Size(other.m_Size), m_Capacity(o
 template<typename T>
 Vector<T> &Vector<T>::operator=( Vector && other) noexcept {
 
-    if (&other == &this)
+    if (&other == this)
         return *this;
 
     Clear();
@@ -193,19 +178,23 @@ void Vector<T>::Pop_back() {
 template<typename T>
 void Vector<T>::Push_back(const T & element) {
 
-    if (m_Size >= m_Capacity)
+    if (m_Size >= m_Capacity) {
+        auto tempElement=T(element);
         ReAlloc();
-
-    new (&m_Buffer[m_Size])T(element);
+        new (&m_Buffer[m_Size]) T(std::move(tempElement));
+    }else new (&m_Buffer[m_Size])T(element);
     m_Size++;
+
 }
 template<typename T>
 void Vector<T>::Push_back( T && element) {
 
-    if (m_Size >= m_Capacity)
+    if (m_Size >= m_Capacity) {
+        auto tempElement=T(std::move(element));
         ReAlloc();
+        new (&m_Buffer[m_Size])T(std::move(tempElement));
 
-    new (&m_Buffer[m_Size])T(std::move(element));
+    }else new (&m_Buffer[m_Size])T(std::move(element));
     m_Size++;
 }
 
@@ -222,7 +211,8 @@ const T &Vector<T>::operator[](size_t indx) const {
 
 template<typename T>
 void Vector<T>::Reserve(size_t newCapacity ) {
-        ReAlloc(newCapacity);
+        if (m_Capacity<newCapacity)
+            ReAlloc(newCapacity);
 }
 
 

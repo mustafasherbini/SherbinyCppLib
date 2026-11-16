@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-
+#include <utility>
+#include <new>
 template <typename T>
 class Vector {
 
@@ -46,8 +47,6 @@ public:
 
     T& operator[](size_t );
     const T& operator[](size_t ) const;
-
-
 
 };
 #include "Vector.tpp"

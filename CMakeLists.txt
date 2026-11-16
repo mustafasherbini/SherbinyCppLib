@@ -7,6 +7,7 @@ add_executable(SherbinyCppLib main.cpp
         src/String.cpp
         include/MyString.h
         include/Vector.h
-        include/Stack.h)
+        include/Stack.h
+        include/TwoStackQueue.h)
 
 target_include_directories(SherbinyCppLib PRIVATE include)
