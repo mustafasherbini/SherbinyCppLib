@@ -32,15 +32,14 @@ String& String::operator= (const String& other)  {
     if (this == &other)
         return * this;
 
-    m_Size= 0 ;
-    delete [] m_Buffer;
-    m_Buffer=nullptr;
-
+    char* temp = nullptr;
     if (other.m_Buffer) {
-        m_Size=other.Size() ;
-        m_Buffer= new char[m_Size + 1 ];
-        std::memcpy(m_Buffer , other.m_Buffer , m_Size + 1 );
+        temp= new char[other.m_Size + 1];
+        std::memcpy(temp , other.m_Buffer , other.m_Size + 1 );
     }
+    delete [] m_Buffer;
+    m_Buffer=temp;
+    m_Size=other.m_Size;
     return *this;
 }
 
@@ -107,21 +106,18 @@ bool String::operator!=(const String &other) const {
 String& String::operator+=(const String & other) {
 
     size_t newSize= m_Size+ other.m_Size;
-    char* temp_Buffer = new char[ newSize+ 1];
-    temp_Buffer[0]= '\0';
+    char* temp_Buffer = new char[ newSize + 1];
 
-    if (m_Buffer)
-        std::strcat(temp_Buffer,m_Buffer);
+    if (m_Size)
+        std::memcpy(temp_Buffer,m_Buffer,m_Size);
 
+    if (other.m_Size)
+        std::memcpy(temp_Buffer + m_Size,other.m_Buffer,other.m_Size);
 
-    if (other.m_Buffer)
-        std::strcat(temp_Buffer,other.m_Buffer);
-
-    std::swap(m_Buffer,temp_Buffer);
-
+    temp_Buffer[newSize]='\0';
+    delete []m_Buffer;
     m_Size=newSize;
-
-    delete [] temp_Buffer;
+    m_Buffer=temp_Buffer;
 
     return *this;
 }
