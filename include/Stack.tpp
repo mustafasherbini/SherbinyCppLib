@@ -1,11 +1,14 @@
-#pragma once
 template<typename T>
 T &Stack<T>::Top() {
+    if (Empty())
+        throw std::out_of_range("Stack is empty");
     return m_Vec.Back();
 }
 
 template<typename T>
 const T &Stack<T>::Top() const {
+    if (Empty())
+        throw std::out_of_range("Stack is empty");
     return m_Vec.Back();
 }
 
@@ -21,6 +24,8 @@ void Stack<T>::Push(const T& element) {
 
 template<typename T>
 void Stack<T>::Pop() {
+    if (Empty())
+        throw std::out_of_range("Stack is empty");
     m_Vec.Pop_back();
 }
 
